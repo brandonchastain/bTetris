@@ -13,9 +13,10 @@ namespace Tetris
             {
                 tiles[i] = new bool[cols];
             }
-
-            tiles[9][0] = true;
         }
+
+        public int Height => tiles.Length;
+        public int Width => tiles[0].Length;
 
         public bool CanPieceMoveTo(Piece piece, int row, int col)
         {
@@ -27,10 +28,19 @@ namespace Tetris
                     if (pieceTiles[r][c])
                     {
                         var rowOutOfBounds = (row + r) >= tiles.Length || (row + r) < 0;
-                        var colOutOfBounds = (col + c) >= tiles[row + r].Length || (col + c) < 0;
-                        var overlap = tiles[row + r][col + c];
+                        if (rowOutOfBounds)
+                        {
+                            return false;
+                        }
 
-                        if (rowOutOfBounds || colOutOfBounds || overlap)
+                        var colOutOfBounds = (col + c) >= tiles[row + r].Length || (col + c) < 0;
+                        if (colOutOfBounds)
+                        {
+                            return false;
+                        }
+
+                        var overlap = tiles[row + r][col + c];
+                        if (overlap)
                         {
                             return false;
                         }
@@ -51,48 +61,46 @@ namespace Tetris
                     int boardRow = r + piece.GetRow();
                     int boardCol = c + piece.GetCol();
 
-                    if (!tiles[boardRow][boardCol])
+                    if (pieceTiles[r][c] == true)
                     {
-                        tiles[boardRow][boardCol] = pieceTiles[r][c];
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException("Tried to place a piece on top of another piece.");
+                        if (!tiles[boardRow][boardCol])
+                        {
+                            tiles[boardRow][boardCol] = pieceTiles[r][c];
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException("Tried to place a piece on top of another piece.");
+                        }
                     }
                 }
             }
         }
 
-        public bool IsRowComplete(int row)
+        public bool ClearCompleteRows()
         {
             for (int r = 0; r < tiles.Length; r++)
             {
-                bool failed = false;
+                bool complete = true;
                 for (int c = 0; c < tiles[r].Length; c++)
                 {
                     if (!tiles[r][c])
                     {
-                        failed = true;
+                        complete = false;
                         break;
                     }
                 }
 
-                if (!failed)
+                if (complete)
                 {
-                    return true;
+                    ClearCompleteRow(r);
                 }
             }
 
             return false;
         }
 
-        public void ClearCompleteRow(int row)
+        private void ClearCompleteRow(int row)
         {
-            if (!IsRowComplete(row))
-            {
-                return;
-            }
-
             for (int c = 0; c < tiles[row].Length; c++)
             {
                 tiles[row][c] = false;
@@ -104,7 +112,6 @@ namespace Tetris
                 for (int c = 0; c < tiles[i].Length; c++)
                 {
                     this.tiles[i][c] = this.tiles[i - 1][c];
-
                 }
             }
         }

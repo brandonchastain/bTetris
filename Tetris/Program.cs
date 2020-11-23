@@ -5,8 +5,8 @@ namespace Tetris
 {
     public class Program
     {
-        private const int Height = 10;
-        private const int Width = 10;
+        private const int Height = 25;
+        private const int Width = 20;
         private const int GameUpdateTicks = 10;
 
         public static void Main(string[] args)
@@ -17,7 +17,10 @@ namespace Tetris
 
             while (true)
             {
-                Thread.Sleep(100);
+
+                Thread.Sleep(17);
+
+                game.HandlePlayerInput();
 
                 if (ticks > GameUpdateTicks)
                 {

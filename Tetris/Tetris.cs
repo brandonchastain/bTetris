@@ -5,27 +5,22 @@ namespace Tetris
 {
     public class Tetris
     {
-        private const int gameUpdateTicks = 10;
-
-        private int ticks;
         private TetrisState state;
         private TetrisBoard board;
+        private PlayerInput playerInput;
         private Piece piece;
         private Piece nextPiece;
 
         public Tetris(int width, int height)
         {
-            board = new TetrisBoard(height, width);
-            piece = Piece.GetNextPiece();
-            nextPiece = Piece.GetNextPiece();
-            state = TetrisState.Started;
+            Init(width, height);
         }
 
-        public IEnumerable<IDrawable> GetDrawables()
+        public bool IsOver => state == TetrisState.GameOver;
+
+        public void HandlePlayerInput()
         {
-            yield return board;
-            yield return piece;
-            // yield return NextPiece;
+            this.playerInput.HandlePlayerInput(this.piece);
         }
 
         public void Update()
@@ -36,21 +31,53 @@ namespace Tetris
             }
         }
 
+        public void Reset()
+        {
+            Init(this.board.Width, this.board.Height);
+        }
+
+        public IDrawable GetDrawablePiece()
+        {
+            return piece;
+        }
+
+        public IDrawable GetDrawableNextPiece()
+        {
+            return nextPiece;
+        }
+
+        public IDrawable GetDrawableBoard()
+        {
+            return board;
+        }
+
+        private void Init(int width, int height)
+        {
+            board = new TetrisBoard(height, width);
+            playerInput = new PlayerInput(board);
+            piece = Piece.GetNextPiece();
+            nextPiece = Piece.GetNextPiece();
+            state = TetrisState.Started;
+        }
+
         private void GameUpdate()
         {
             var rowBelow = piece.GetRow() + 1;
             if (board.CanPieceMoveTo(piece, rowBelow, piece.GetCol()))
             {
-                piece.Move(Direction.Down);
+                piece.Move(InputDirection.Down);
             }
             else
             {
                 board.PlacePiece(piece);
-                GetNextPiece();
+
+                board.ClearCompleteRows();
+
+                GenerateNextPiece();
             }
         }
 
-        private void GetNextPiece()
+        private void GenerateNextPiece()
         {
             piece = nextPiece;
             nextPiece = Piece.GetNextPiece();

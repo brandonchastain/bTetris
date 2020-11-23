@@ -2,8 +2,9 @@ using System;
 
 namespace Tetris
 {
-    public enum Direction
+    public enum InputDirection
     {
+        None,
         Up,
         Right,
         Down,
