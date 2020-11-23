@@ -12,7 +12,7 @@ namespace Tetris
 
         private Piece()
         {
-            this.row = 4;
+            this.row = 1;
 
             // TODO: base column off of actual board width
             this.col = GetRandom().Next(0, 10);

@@ -5,11 +5,14 @@ namespace Tetris
 {
     public class Tetris
     {
+        private int gameUpdateTicks = 7;
+
         private TetrisState state;
         private TetrisBoard board;
         private PlayerInput playerInput;
         private Piece piece;
         private Piece nextPiece;
+        private int ticks = 0;
 
         public Tetris(int width, int height)
         {
@@ -18,17 +21,20 @@ namespace Tetris
 
         public bool IsOver => state == TetrisState.GameOver;
 
-        public void HandlePlayerInput()
-        {
-            this.playerInput.HandlePlayerInput(this.piece);
-        }
-
         public void Update()
         {
+            this.HandlePlayerInput();
+
             if (state == TetrisState.Started)
             {
-                GameUpdate();
+                if (ticks > gameUpdateTicks)
+                {
+                    GameUpdate();
+                    ticks = 0;
+                }
             }
+
+            ticks++;
         }
 
         public void Reset()
@@ -60,6 +66,11 @@ namespace Tetris
             state = TetrisState.Started;
         }
 
+        private void HandlePlayerInput()
+        {
+            this.playerInput.HandlePlayerInput(this.piece);
+        }
+
         private void GameUpdate()
         {
             var rowBelow = piece.GetRow() + 1;
@@ -70,8 +81,12 @@ namespace Tetris
             else
             {
                 board.PlacePiece(piece);
-
-                board.ClearCompleteRows();
+                var didCompleteRow = board.ClearCompleteRows();
+                if (didCompleteRow)
+                {
+                    gameUpdateTicks -= 3;
+                    if (gameUpdateTicks < 0) gameUpdateTicks = 0;
+                }
 
                 GenerateNextPiece();
             }
