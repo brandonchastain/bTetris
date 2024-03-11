@@ -4,6 +4,6 @@ namespace Tetris
 {
     public interface ITetrisDrawer
     {
-        void Draw();
+        ValueTask Draw();
     }
 }

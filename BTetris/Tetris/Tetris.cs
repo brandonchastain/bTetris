@@ -5,7 +5,7 @@ namespace Tetris
 {
     public class Tetris
     {
-        private int gameUpdateTicks = 7;
+        private int gameUpdateTicks = 15;
 
         private TetrisState state;
         private TetrisBoard board;
@@ -42,6 +42,16 @@ namespace Tetris
             Init(this.board.Width, this.board.Height);
         }
 
+        public void Resize(int w, int h)
+        {
+            Init(w / BlazorDrawer.TileSize, h / BlazorDrawer.TileSize);
+        }
+
+        public void SendKeyDown(string keyCode)
+        {
+            this.playerInput.QueueInput(keyCode);
+        }
+
         public IDrawable GetDrawablePiece()
         {
             return piece;
@@ -57,13 +67,17 @@ namespace Tetris
             return board;
         }
 
+        public void Start()
+        {
+            state = TetrisState.Started;
+        }
+
         private void Init(int width, int height)
         {
             board = new TetrisBoard(height, width);
             playerInput = new PlayerInput(board);
             piece = Piece.GetNextPiece();
             nextPiece = Piece.GetNextPiece();
-            state = TetrisState.Started;
         }
 
         private void HandlePlayerInput()
@@ -82,12 +96,6 @@ namespace Tetris
             {
                 board.PlacePiece(piece);
                 var didCompleteRow = board.ClearCompleteRows();
-                if (didCompleteRow)
-                {
-                    gameUpdateTicks -= 3;
-                    if (gameUpdateTicks < 0) gameUpdateTicks = 0;
-                }
-
                 GenerateNextPiece();
             }
         }

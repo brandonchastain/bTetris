@@ -8,15 +8,43 @@ namespace Tetris
     public class PlayerInput
     {
         private TetrisBoard board;
+        private InputDirection lastInput = InputDirection.None;
 
         public PlayerInput(TetrisBoard board)
         {
             this.board = board ?? throw new ArgumentNullException(nameof(board));
         }
 
+        public void QueueInput(string keyCode)
+        {
+            InputDirection direction;
+            switch (keyCode)
+            {
+                case "ArrowUp":
+                    direction = InputDirection.Up;
+                    break;
+                case "ArrowRight":
+                    direction = InputDirection.Right;
+                    break;
+                case "ArrowDown":
+                    direction = InputDirection.Down;
+                    break;
+                case "ArrowLeft":
+                    direction = InputDirection.Left;
+                    break;
+                default:
+                    direction = InputDirection.None;
+                    break;
+            }
+
+            this.lastInput = direction;
+        }
+
         public void HandlePlayerInput(Piece currentPlayerPiece)
         {
-            var inputDir = this.DetectInputDirection();
+            var inputDir = this.lastInput;
+            this.lastInput = InputDirection.None;
+
             switch (inputDir)
             {
                 case InputDirection.Up:
@@ -26,40 +54,6 @@ namespace Tetris
                     TryMovePiece(currentPlayerPiece, inputDir);
                     break;
             }
-        }
-
-        private InputDirection DetectInputDirection()
-        {
-            if (Console.KeyAvailable)
-            {
-                var key = Console.ReadKey(false);
-
-                // Clear the input buffer
-                while (Console.KeyAvailable)
-                {
-                    Console.ReadKey(false);
-                }
-
-                switch (key.Key)
-                {
-                    case (ConsoleKey.UpArrow):
-                        return InputDirection.Up;
-
-                    case (ConsoleKey.RightArrow):
-                        return InputDirection.Right;
-
-                    case (ConsoleKey.DownArrow):
-                        return InputDirection.Down;
-
-                    case (ConsoleKey.LeftArrow):
-                        return InputDirection.Left;
-
-                    default:
-                        return InputDirection.None;
-                }
-            }
-
-            return InputDirection.None;
         }
 
         private void TryMovePiece(Piece piece, InputDirection dir)

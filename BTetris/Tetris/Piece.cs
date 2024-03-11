@@ -12,10 +12,8 @@ namespace Tetris
 
         private Piece()
         {
-            this.row = 1;
-
-            // TODO: base column off of actual board width
-            this.col = GetRandom().Next(0, 10);
+            this.row = 0;
+            this.col = 4;
         }
 
         private Piece(string shape)

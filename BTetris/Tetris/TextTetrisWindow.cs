@@ -2,7 +2,7 @@ using System;
 
 namespace Tetris
 {
-    public class TextTetrisWindow : ITetrisDrawer
+    public class TextTetrisWindow
     {
         private Tetris game;
         private bool printedGameOver;
