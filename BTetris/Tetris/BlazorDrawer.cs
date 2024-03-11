@@ -7,9 +7,9 @@ namespace Tetris
         private Canvas2DContext context;
         private Tetris game;
         private bool[][] erasePiece;
-        public const int TileSize = 30;
+        public int TileSize = 30;
 
-        public BlazorDrawer(Canvas2DContext context, Tetris game)
+        public BlazorDrawer(Canvas2DContext context, Tetris game, bool isVertical)
         {
             this.context = context;
             this.game = game;
@@ -17,6 +17,12 @@ namespace Tetris
             for (int i = 0; i < 5; i++)
             {
                 this.erasePiece[i] = new bool[5];
+            }
+
+            this.TileSize = 30;
+            if (isVertical)
+            {
+                this.TileSize = 35;
             }
         }
 

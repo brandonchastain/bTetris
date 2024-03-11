@@ -29,6 +29,8 @@
     private float LastRender;
     private bool started = false;
     private bool crashed = false;
+    private int viewportWidth = 0;
+    private int viewportHeight = 1;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -40,6 +42,13 @@
         this.ctx = await _canvasReference.CreateCanvas2DAsync();
         await JsRuntime.InvokeAsync<object>("initRenderJS", DotNetObjectReference.Create(this));
         await base.OnInitializedAsync();
+    }
+
+    [JSInvokable]
+    public async ValueTask SetViewportAsync(int w, int h)
+    {
+        this.viewportWidth = w;
+        this.viewportHeight = h;
     }
 
     public void OnKeyDown(KeyboardEventArgs e)
@@ -117,7 +126,7 @@
             if (Game == null)
             {
                 Game = new Tetris(10, 20);
-                Drawer = new BlazorDrawer(this.ctx, Game);
+                Drawer = new BlazorDrawer(this.ctx, Game, this.viewportWidth < this.viewportHeight);
             }
 
             var timeStamp = ts;

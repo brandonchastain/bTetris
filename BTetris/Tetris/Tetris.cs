@@ -44,7 +44,6 @@ namespace Tetris
 
         public void Resize(int w, int h)
         {
-            Init(w / BlazorDrawer.TileSize, h / BlazorDrawer.TileSize);
         }
 
         public void SendKeyDown(string keyCode)
