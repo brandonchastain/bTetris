@@ -5,7 +5,7 @@ namespace Tetris
 {
     public class Tetris
     {
-        private int gameUpdateTicks = 15;
+        private int gameUpdateTicks = 7;
 
         private TetrisState state;
         private TetrisBoard board;
