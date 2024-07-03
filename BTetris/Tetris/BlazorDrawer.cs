@@ -7,9 +7,9 @@ namespace Tetris
         private Canvas2DContext context;
         private Tetris game;
         private bool[][] erasePiece;
-        public int TileSize = 30;
+        public static int TileSize = 25;
 
-        public BlazorDrawer(Canvas2DContext context, Tetris game, bool isVertical)
+        public BlazorDrawer(Canvas2DContext context, Tetris game)
         {
             this.context = context;
             this.game = game;
@@ -18,17 +18,12 @@ namespace Tetris
             {
                 this.erasePiece[i] = new bool[5];
             }
-
-            this.TileSize = 30;
-            if (isVertical)
-            {
-                this.TileSize = 35;
-            }
         }
 
         public async ValueTask Draw()
         {
             await DrawTitle();
+            await DrawScore();
 
             IDrawable board = game.GetDrawableBoard();
             await DrawBorders(board, "white");
@@ -40,10 +35,18 @@ namespace Tetris
         private async ValueTask DrawTitle()
         {
             await context.SetFillStyleAsync("black");
-            await context.FillRectAsync(0, 0, 100, 200);
+            await context.FillRectAsync(260, 300, 200, 200);
             await context.SetFillStyleAsync("white");
-            await context.SetFontAsync("bold 48px Helvetica");
-            await context.FillTextAsync("B TETRIS", 100, 200);
+            await context.SetFontAsync("bold 18pt Helvetica");
+            await context.FillTextAsync("B TETRIS", 260, 490);
+        }
+
+        private async ValueTask DrawScore()
+        {
+            var score = game.GetScore();
+            await context.SetFillStyleAsync("white");
+            await context.SetFontAsync("bold 18pt Helvetica");
+            await context.FillTextAsync($"Score: {score}", 260, 460);
         }
 
         private async ValueTask DrawNextPiece(IDrawable p, IDrawable board)

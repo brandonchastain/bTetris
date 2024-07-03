@@ -76,9 +76,9 @@ namespace Tetris
             }
         }
 
-        public bool ClearCompleteRows()
+        public int ClearCompleteRows()
         {
-            var didComplete = false;
+            int count = 0;
             for (int r = 0; r < tiles.Length; r++)
             {
                 bool complete = true;
@@ -94,11 +94,11 @@ namespace Tetris
                 if (complete)
                 {
                     ClearCompleteRow(r);
-                    didComplete = true;
+                    count++;
                 }
             }
 
-            return didComplete;
+            return count;
         }
 
         private void ClearCompleteRow(int row)

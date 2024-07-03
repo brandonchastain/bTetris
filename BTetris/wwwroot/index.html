@@ -4,11 +4,13 @@
 <head>
     <title>B TETRIS</title>
     <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+    <link rel="stylesheet" href="style.css">
 </head>
 
-<body style="margin: 0px; background-color: #000000; color: white; font-family: sans-serif; height: 200px; overflow: hidden;">
+<body style="margin: auto; background-color: #000000; color: white; font-family: sans-serif; height: 100%; width:100%; overflow: hidden;">
 
-    <div id="app">
+    <div id="app" class="col-4" style="margin: auto; background-color: red;">
         <div style="margin: 1em; font-size: 12pt;">B Tetris is loading...</div>
     </div>
 
@@ -72,16 +74,19 @@
                     theInstance.invokeMethodAsync('RightSwipe');
                 } else {
                     /* left swipe */
-
+                    
                     theInstance.invokeMethodAsync('LeftSwipe');
                 }
             } else {
                 if (yDiff > 0) {
-                    /* down swipe */
-                    theInstance.invokeMethodAsync('DownSwipe');
-                } else {
                     /* up swipe */
                     theInstance.invokeMethodAsync('UpSwipe');
+                } else {
+                    /* down swipe */
+                    if (yDiff < -7)
+                    {
+                        theInstance.invokeMethodAsync('DownSwipe');
+                    }
                 }
             }
             /* reset values */
@@ -99,6 +104,8 @@
             console.log(h);
             theInstance.invokeMethodAsync('SetViewport', w, h);
             window.requestAnimationFrame(renderJS);
+            var canvas = document.getElementById('brandonContainer');
+            canvas.onselectstart = function () { return false; }
         };
 
         document.getElementById('brandonContainer').focus();

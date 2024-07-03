@@ -17,9 +17,9 @@ namespace Tetris
             {
                 Thread.Sleep(17);
 
-                game.Update();
+                // game.Update();
 
-              //  window.Draw();
+                // window.Draw();
             }
         }
     }

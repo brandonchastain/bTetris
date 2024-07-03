@@ -5,14 +5,14 @@ namespace Tetris
 {
     public class Tetris
     {
-        private int gameUpdateTicks = 7;
-
+        private TimeSpan tickMs;
+        private DateTimeOffset lastTick = default;
         private TetrisState state;
         private TetrisBoard board;
         private PlayerInput playerInput;
         private Piece piece;
         private Piece nextPiece;
-        private int ticks = 0;
+        private int score;
 
         public Tetris(int width, int height)
         {
@@ -21,29 +21,23 @@ namespace Tetris
 
         public bool IsOver => state == TetrisState.GameOver;
 
-        public void Update()
+        public void Update(DateTimeOffset ts)
         {
             this.HandlePlayerInput();
 
             if (state == TetrisState.Started)
             {
-                if (ticks > gameUpdateTicks)
+                if (ts - lastTick > tickMs)
                 {
                     GameUpdate();
-                    ticks = 0;
+                    lastTick = ts;
                 }
             }
-
-            ticks++;
         }
 
         public void Reset()
         {
             Init(this.board.Width, this.board.Height);
-        }
-
-        public void Resize(int w, int h)
-        {
         }
 
         public void SendKeyDown(string keyCode)
@@ -66,6 +60,11 @@ namespace Tetris
             return board;
         }
 
+        public int GetScore()
+        {
+            return score;
+        }
+
         public void Start()
         {
             state = TetrisState.Started;
@@ -77,6 +76,8 @@ namespace Tetris
             playerInput = new PlayerInput(board);
             piece = Piece.GetNextPiece();
             nextPiece = Piece.GetNextPiece();
+            score = 0;
+            tickMs = TimeSpan.FromMilliseconds(300);
         }
 
         private void HandlePlayerInput()
@@ -94,7 +95,11 @@ namespace Tetris
             else
             {
                 board.PlacePiece(piece);
-                var didCompleteRow = board.ClearCompleteRows();
+                
+                var completedRowCount = board.ClearCompleteRows();
+                this.score += completedRowCount;
+                this.tickMs -= TimeSpan.FromMilliseconds(10 * completedRowCount);
+
                 GenerateNextPiece();
             }
         }

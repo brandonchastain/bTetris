@@ -50,6 +50,16 @@ namespace Tetris
                 case InputDirection.Up:
                     currentPlayerPiece.Rotate();
                     break;
+                case InputDirection.Down:
+                    var piece = currentPlayerPiece;
+                    var row = piece.GetRow() + 1;
+                    var col = piece.GetCol();
+                    while (board.CanPieceMoveTo(piece, row, col))
+                    {
+                        piece.Move(InputDirection.Down);
+                        row++;
+                    }
+                    break;
                 default:
                     TryMovePiece(currentPlayerPiece, inputDir);
                     break;
