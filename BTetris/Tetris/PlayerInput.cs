@@ -45,15 +45,24 @@ namespace Tetris
             var inputDir = this.lastInput;
             this.lastInput = InputDirection.None;
 
+            var row = currentPlayerPiece.GetRow();
+            var col = currentPlayerPiece.GetCol();
+
             switch (inputDir)
             {
                 case InputDirection.Up:
                     currentPlayerPiece.Rotate();
+
+                    if (!board.CanPieceMoveTo(currentPlayerPiece, row, col))
+                    {
+                        currentPlayerPiece.Rotate();
+                        currentPlayerPiece.Rotate();
+                        currentPlayerPiece.Rotate();
+                    }
                     break;
                 case InputDirection.Down:
                     var piece = currentPlayerPiece;
-                    var row = piece.GetRow() + 1;
-                    var col = piece.GetCol();
+                    row = piece.GetRow() + 1;
                     while (board.CanPieceMoveTo(piece, row, col))
                     {
                         piece.Move(InputDirection.Down);

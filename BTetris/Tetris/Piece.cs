@@ -67,7 +67,6 @@ namespace Tetris
         {
             // bug: pieces can be rotated out of bounds.
             // TODO: Add check for outofbounds (currently that logic is in TetrisBoard.CanPieceMoveTo).
-
             var width = tiles[0].Length;
             var rotated = new bool[tiles.Length][];
             for (int r = 0; r < rotated.Length; r++)
@@ -132,46 +131,55 @@ namespace Tetris
         private static Piece[] Pieces = new Piece[]
         {
             new Piece(
-                "x  \n" +
-                "x  \n" +
-                "xx \n"
+                " x  \n" +
+                " x  \n" +
+                " xx \n" +
+                "    \n"
             ),
             new Piece
             (
-                "xx \n" +
-                "xx \n" +
-                "   \n"
+                "xx\n" +
+                "xx\n"
             ),
             new Piece
             (
-                "xx \n" +
-                "x  \n" +
-                "x  \n"
+                " xx \n" +
+                " x  \n" +
+                " x  \n" +
+                "    \n"
             ),
             new Piece
             (
-                "x  \n" +
-                "xx \n" +
-                "x  \n"
+                "     \n" +
+                "  x  \n" +
+                "  xx \n" +
+                "  x  \n" +
+                "     \n"
             ),
             new Piece
             (
-                "x  \n" +
-                "xx \n" +
-                " x \n"
+                "     \n" +
+                "  x  \n" +
+                "  xx \n" +
+                "   x \n" +
+                "     \n"
             ),
             new Piece
             (
-                " x \n" +
-                "xx \n" +
-                "x  \n"
+                "     \n" +
+                "   x \n" +
+                "  xx \n" +
+                "  x  \n" +
+                "     \n"
             ),
             new Piece
             (
-                "x   \n" +
-                "x   \n" +
-                "x   \n" +
-                "x   \n"
+                "      \n" +
+                "   x  \n" +
+                "   x  \n" +
+                "   x  \n" +
+                "   x  \n" +
+                "      \n"
             )
         };
     }
