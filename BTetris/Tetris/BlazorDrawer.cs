@@ -30,6 +30,7 @@ namespace Tetris
             await Draw(board, "green", force: true);
             await Draw(game.GetDrawablePiece(), "red");
             await DrawNextPiece(game.GetDrawableNextPiece(), board);
+            await DrawBankPiece(game.GetDrawableBankPiece(), board);
         }
 
         private async ValueTask DrawTitle()
@@ -51,9 +52,22 @@ namespace Tetris
 
         private async ValueTask DrawNextPiece(IDrawable p, IDrawable board)
         {
-            var w = board.GetTiles()[0].Length;
+            var w = board.GetTiles()[0].Length + 1;
             await DrawTiles(erasePiece, 0, w, "black", force: true);
             await DrawTiles(p.GetTiles(), 0, w, "blue");
+        }
+
+        private async ValueTask DrawBankPiece(IDrawable p, IDrawable board)
+        {
+            var w = board.GetTiles()[0].Length + 1;
+            await DrawTiles(erasePiece, 6, w, "black", force: true);
+
+            if (p == null)
+            {
+                return;
+            }
+
+            await DrawTiles(p.GetTiles(), 6, w, "yellow");
         }
 
         private async ValueTask Draw(IDrawable p, string color, bool force = false)

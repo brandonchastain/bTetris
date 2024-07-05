@@ -8,17 +8,9 @@
 @inject IJSRuntime JsRuntime
 @inject ILogger<Tetris> logger
 
-<div 
-    id="brandonContainer"
-    tabindex="0"
-    @onclick="Clicked"
-    @onkeydown="OnKeyDown">
-
-    <div id="canvasHolder" class="col-4" style="margin: auto; position: fixed; height: 100%; overflow:hidden;" >
+    <div id="canvasHolder" class="col-4" tabindex="1" @onclick="Clicked" @onkeydown="OnKeyDown" @onkeydown:preventDefault="true" style="margin: auto; position: fixed; height: 100%; overflow:hidden; -webkit-tap-highlight-color:transparent; outline:none;" >
         <BECanvas @ref="_canvasReference"></BECanvas>
     </div>
-
-</div>
 
 @code {
     private Tetris Game;
@@ -53,6 +45,10 @@
         {
             Game.Reset();
             Game.Start();
+        }
+        else
+        {
+            Game.SendKeyDown("Space");
         }
 
         started = true;

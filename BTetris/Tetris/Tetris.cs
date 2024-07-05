@@ -12,6 +12,8 @@ namespace Tetris
         private PlayerInput playerInput;
         private Piece piece;
         private Piece nextPiece;
+        private Piece bankPiece;
+        private bool userBankedPiece;
         private int score;
 
         public Tetris(int width, int height)
@@ -45,37 +47,54 @@ namespace Tetris
             this.playerInput.QueueInput(keyCode);
         }
 
-        public IDrawable GetDrawablePiece()
-        {
-            return piece;
-        }
+        public IDrawable GetDrawableBankPiece() => bankPiece;
 
-        public IDrawable GetDrawableNextPiece()
-        {
-            return nextPiece;
-        }
+        public IDrawable GetDrawablePiece() => piece;
 
-        public IDrawable GetDrawableBoard()
-        {
-            return board;
-        }
+        public IDrawable GetDrawableNextPiece() => nextPiece;
 
-        public int GetScore()
-        {
-            return score;
-        }
+        public IDrawable GetDrawableBoard() => board;
+
+        public int GetScore() => score;
 
         public void Start()
         {
             state = TetrisState.Started;
         }
 
+        public void BankCurrentPiece()
+        {
+            if (userBankedPiece)
+            {
+                // only once per piece, can't swap back until piece falls
+                return;
+            }
+
+            var temp = piece;
+            var result = bankPiece;
+            bankPiece = piece;
+            piece = result;
+
+            if (piece == null)
+            {
+                piece = Piece.GetNextPiece();
+            }
+
+            while (board.CanPieceMoveTo(piece, piece.GetRow() - 1, piece.GetCol()))
+            {
+                piece.Move(InputButton.Up);
+            }
+
+            userBankedPiece = true;
+        }
+
         private void Init(int width, int height)
         {
             board = new TetrisBoard(height, width);
-            playerInput = new PlayerInput(board);
+            playerInput = new PlayerInput(this, board);
             piece = Piece.GetNextPiece();
             nextPiece = Piece.GetNextPiece();
+            bankPiece = null;
             score = 0;
             tickMs = TimeSpan.FromMilliseconds(300);
         }
@@ -90,7 +109,7 @@ namespace Tetris
             var rowBelow = piece.GetRow() + 1;
             if (board.CanPieceMoveTo(piece, rowBelow, piece.GetCol()))
             {
-                piece.Move(InputDirection.Down);
+                piece.Move(InputButton.Down);
             }
             else
             {
@@ -109,6 +128,7 @@ namespace Tetris
             piece = nextPiece;
             nextPiece = Piece.GetNextPiece();
             CheckForGameOver();
+            userBankedPiece = false;
         }
 
         private void CheckForGameOver()

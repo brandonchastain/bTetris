@@ -7,33 +7,38 @@ namespace Tetris
 {
     public class PlayerInput
     {
+        private Tetris game;
         private TetrisBoard board;
-        private InputDirection lastInput = InputDirection.None;
+        private InputButton lastInput = InputButton.None;
 
-        public PlayerInput(TetrisBoard board)
+        public PlayerInput(Tetris game, TetrisBoard board)
         {
+            this.game = game ?? throw new ArgumentNullException(nameof(game));
             this.board = board ?? throw new ArgumentNullException(nameof(board));
         }
 
         public void QueueInput(string keyCode)
         {
-            InputDirection direction;
+            InputButton direction;
             switch (keyCode)
             {
                 case "ArrowUp":
-                    direction = InputDirection.Up;
+                    direction = InputButton.Up;
                     break;
                 case "ArrowRight":
-                    direction = InputDirection.Right;
+                    direction = InputButton.Right;
                     break;
                 case "ArrowDown":
-                    direction = InputDirection.Down;
+                    direction = InputButton.Down;
                     break;
                 case "ArrowLeft":
-                    direction = InputDirection.Left;
+                    direction = InputButton.Left;
+                    break;
+                case "Space":
+                    direction = InputButton.Space;
                     break;
                 default:
-                    direction = InputDirection.None;
+                    direction = InputButton.None;
                     break;
             }
 
@@ -43,14 +48,17 @@ namespace Tetris
         public void HandlePlayerInput(Piece currentPlayerPiece)
         {
             var inputDir = this.lastInput;
-            this.lastInput = InputDirection.None;
+            this.lastInput = InputButton.None;
 
             var row = currentPlayerPiece.GetRow();
             var col = currentPlayerPiece.GetCol();
 
             switch (inputDir)
             {
-                case InputDirection.Up:
+                case InputButton.Space:
+                    this.game.BankCurrentPiece();
+                    break;
+                case InputButton.Up:
                     currentPlayerPiece.Rotate();
 
                     if (!board.CanPieceMoveTo(currentPlayerPiece, row, col))
@@ -60,12 +68,12 @@ namespace Tetris
                         currentPlayerPiece.Rotate();
                     }
                     break;
-                case InputDirection.Down:
+                case InputButton.Down:
                     var piece = currentPlayerPiece;
                     row = piece.GetRow() + 1;
                     while (board.CanPieceMoveTo(piece, row, col))
                     {
-                        piece.Move(InputDirection.Down);
+                        piece.Move(InputButton.Down);
                         row++;
                     }
                     break;
@@ -75,28 +83,28 @@ namespace Tetris
             }
         }
 
-        private void TryMovePiece(Piece piece, InputDirection dir)
+        private void TryMovePiece(Piece piece, InputButton dir)
         {
             var row = piece.GetRow();
             var col = piece.GetCol();
 
             switch (dir)
             {
-                case InputDirection.Right:
+                case InputButton.Right:
                     col++;
                     break;
-                case InputDirection.Left:
+                case InputButton.Left:
                     col--;
                     break;
-                case InputDirection.Down:
+                case InputButton.Down:
                     row++;
                     break;
-                case InputDirection.Up:
+                case InputButton.Up:
                 default:
                     break;
             }
 
-            if (dir != InputDirection.None && board.CanPieceMoveTo(piece, row, col))
+            if (dir != InputButton.None && board.CanPieceMoveTo(piece, row, col))
             {
                 piece.Move(dir);
             }

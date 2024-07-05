@@ -42,20 +42,20 @@ namespace Tetris
         public int GetCol() => col;
         public int GetRow() => row;
 
-        public void Move(InputDirection d)
+        public void Move(InputButton d)
         {
             switch (d)
             {
-                case InputDirection.Up:
+                case InputButton.Up:
                     this.row -= 1;
                     break;
-                case InputDirection.Right:
+                case InputButton.Right:
                     this.col += 1;
                     break;
-                case InputDirection.Down:
+                case InputButton.Down:
                     this.row += 1;
                     break;
-                case InputDirection.Left:
+                case InputButton.Left:
                     this.col -= 1;
                     break;
                 default:

@@ -2,12 +2,13 @@ using System;
 
 namespace Tetris
 {
-    public enum InputDirection
+    public enum InputButton
     {
         None,
         Up,
         Right,
         Down,
-        Left
+        Left,
+        Space
     }
 }
