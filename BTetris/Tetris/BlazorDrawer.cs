@@ -8,6 +8,8 @@ namespace Tetris
         private Tetris game;
         private bool[][] erasePiece;
         public static int TileSize = 25;
+        public static int[] BankButtonPos = new int[2]{270, 315};
+        public static int[] BankButtonSize = new int[2]{100, 100};
 
         public BlazorDrawer(Canvas2DContext context, Tetris game)
         {
@@ -26,11 +28,12 @@ namespace Tetris
             await DrawScore();
 
             IDrawable board = game.GetDrawableBoard();
-            await DrawBorders(board, "white");
             await Draw(board, "green", force: true);
             await Draw(game.GetDrawablePiece(), "red");
             await DrawNextPiece(game.GetDrawableNextPiece(), board);
             await DrawBankPiece(game.GetDrawableBankPiece(), board);
+            await DrawBankButton();
+            await DrawBorders(board, "white");
         }
 
         private async ValueTask DrawTitle()
@@ -52,22 +55,33 @@ namespace Tetris
 
         private async ValueTask DrawNextPiece(IDrawable p, IDrawable board)
         {
-            var w = board.GetTiles()[0].Length + 1;
-            await DrawTiles(erasePiece, 0, w, "black", force: true);
-            await DrawTiles(p.GetTiles(), 0, w, "blue");
+            var w = board.GetTiles()[0].Length;
+            await DrawTiles(erasePiece, 1, w, "black", force: true);
+            await DrawTiles(p.GetTiles(), 1, w, "blue");
+            //await context.SetStrokeStyleAsync("white");
+            //await context.StrokeRectAsync(w * TileSize, 0, 5 * TileSize, 5 * TileSize);
         }
 
         private async ValueTask DrawBankPiece(IDrawable p, IDrawable board)
         {
-            var w = board.GetTiles()[0].Length + 1;
-            await DrawTiles(erasePiece, 6, w, "black", force: true);
+            var w = board.GetTiles()[0].Length;
+            await DrawTiles(erasePiece, 7, w, "black", force: true);
 
             if (p == null)
             {
                 return;
             }
 
-            await DrawTiles(p.GetTiles(), 6, w, "yellow");
+            await DrawTiles(p.GetTiles(), 7, w, "yellow");
+        }
+
+        private async ValueTask DrawBankButton()
+        {
+            await context.SetFillStyleAsync("green");
+            await context.FillRectAsync(BankButtonPos[0], BankButtonPos[1], BankButtonSize[0], BankButtonSize[1]);
+            await context.SetFillStyleAsync("white");
+            await context.SetFontAsync("18pt Helvetica");
+            await context.FillTextAsync("BANK", BankButtonPos[0] + 15, BankButtonPos[1] + 65);
         }
 
         private async ValueTask Draw(IDrawable p, string color, bool force = false)

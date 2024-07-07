@@ -77,10 +77,7 @@
                     theInstance.invokeMethodAsync('UpSwipe');
                 } else {
                     /* down swipe */
-                    if (yDiff < -7)
-                    {
-                        theInstance.invokeMethodAsync('DownSwipe');
-                    }
+                    theInstance.invokeMethodAsync('DownSwipe');
                 }
             }
             /* reset values */
@@ -92,11 +89,11 @@
             window.theInstance = instance;
             window.addEventListener("resize", resizeCanvasToFitWindow);
             resizeCanvasToFitWindow();
-            var w = window.visualViewport.width;
-            var h = window.visualViewport.height;
-            console.log(w);
-            console.log(h);
-            theInstance.invokeMethodAsync('SetViewport', w, h);
+            //var w = window.visualViewport.width;
+            //var h = window.visualViewport.height;
+            //console.log(w);
+            //console.log(h);
+            //theInstance.invokeMethodAsync('SetViewport', w, h);
             window.requestAnimationFrame(renderJS);
         };
 

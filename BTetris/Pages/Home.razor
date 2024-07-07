@@ -15,7 +15,6 @@
 @code {
     private Tetris Game;
     private ITetrisDrawer Drawer;
-    private bool forceRenderOnce;
     private Canvas2DContext ctx;
     protected BECanvasComponent _canvasReference;
     private DateTimeOffset LastRender;
@@ -41,13 +40,22 @@
 
     public void Clicked(MouseEventArgs e)
     {
+        var butX = BlazorDrawer.BankButtonPos[0];
+        var butY = BlazorDrawer.BankButtonPos[1];
+        var butW = BlazorDrawer.BankButtonSize[0];
+        var butH = BlazorDrawer.BankButtonSize[1];
+        bool clickedBank = 
+            e.ClientX >= butX && e.ClientX <= butX + butW &&
+            e.ClientY >= butY && e.ClientY <= butY + butH;
+
         if (Game.IsOver || crashed || !started)
         {
             Game.Reset();
             Game.Start();
         }
-        else
+        else if (clickedBank)
         {
+            // bank the piece, same as pressing space.
             Game.SendKeyDown("Space");
         }
 
