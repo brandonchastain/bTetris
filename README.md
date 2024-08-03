@@ -8,7 +8,7 @@ A free-imagination of a certain Soviet game that we all know and love.
 First, make sure [.NET 8 or later](https://learn.microsoft.com/en-us/dotnet/core/install/) is installed on your computer.
 
 ## How to Run
-Clone the source code and use the `dotnet run` command to run GraphViz:
+Clone the source code and use the `dotnet run` command:
 
 ```
 git clone https://github.com/brandonchastain/bTetris.git
